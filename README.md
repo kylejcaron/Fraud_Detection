@@ -1,38 +1,9 @@
 # Fraud Detection Web App
 
-![jpg](website.jpg)
+![jpg](Website.jpg)
 
+Due to privacy reasons, the api client and data used for this web application and ML model were not uploaded to github. The scope of this project was a four person, two day sprint to create a Fraud Prediction Model on Event Data and launch a web application / product dashboard that a company could use to investigate Fraudulent events.
 
-
-```python
-import pandas as pd
-import numpy as np
-from matplotlib import pyplot as plt
-%matplotlib inline
-import seaborn as sns
-from src.model import GBModel
-import pandas as pd
-import numpy as np
-import pickle
-from src.cleaner import Cleaner
-from sklearn.ensemble import GradientBoostingClassifier
-from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import train_test_split, cross_val_score
-from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import mean_squared_error, r2_score
-pd.set_option('display.max_rows', 100)
-pd.set_option('display.max_columns', 50)
-pd.set_option('display.width', 1000)
-from src.util import *
-```
-
-
-```python
-df = pd.read_pickle('data/pickled_df')
-ticket_types = pd.read_pickle('data/ticket_types')
-df['fraud'] = df.acct_type.str.contains('fraud').astype(int)
-df['spam'] = df.acct_type.str.contains('spam').astype(int)
-```
 
 # Fraud Rate
 
@@ -147,31 +118,6 @@ barplotter(df, 'spam')
 ![png](Summary_files/Summary_15_0.png)
 
 
-# Clean Data
-
-
-```python
-clean = Cleaner()
-clean.fit(df)
-X = clean.transform(df)
-```
-
-    Rating risk...
-
-
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/pandas/core/series.py:951: FutureWarning: 
-    Passing list-likes to .loc or [] with any missing label will raise
-    KeyError in the future, you can use .reindex() as an alternative.
-    
-    See the documentation here:
-    https://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-listlike
-      return self.loc[key]
-
-
-    Risk ratings complete
-    Written to pickle!
-
-
 ## Create a function to Clean Categorical Data
 
 This function creates dictionaries for cleaning that can be used to quickly reduce columns with thousands of categories into just 5 categories grouped by level of risk. 
@@ -203,20 +149,6 @@ X.head()
 
 
 
-
-<div>
-<style scoped>
-    .dataframe tbody tr th:only-of-type {
-        vertical-align: middle;
-    }
-
-    .dataframe tbody tr th {
-        vertical-align: top;
-    }
-
-    .dataframe thead th {
-        text-align: right;
-    }
 </style>
 <table border="1" class="dataframe">
   <thead>
@@ -465,7 +397,6 @@ X.head()
 </div>
 
 
-
 # Optimizing Model with Grid Search
 
 
@@ -485,19 +416,6 @@ X_train, X_test, y_train, y_test = \
 
 clean.fit(X_train)
 ```
-
-    Rating risk...
-    Risk ratings complete
-    Written to pickle!
-
-
-
-
-
-    <src.cleaner.Cleaner at 0x15bc93a20>
-
-
-
 
 ```python
 X_train = clean.transform(X_train)
@@ -536,30 +454,6 @@ gb_gridsearch.fit(X_train, y_train)
 print( "best parameters:", gb_gridsearch.best_params_ )
 ```
 
-    Fitting 3 folds for each of 216 candidates, totalling 648 fits
-
-
-    [Parallel(n_jobs=-1)]: Using backend LokyBackend with 8 concurrent workers.
-    [Parallel(n_jobs=-1)]: Done  34 tasks      | elapsed:   54.8s
-    [Parallel(n_jobs=-1)]: Done 184 tasks      | elapsed:  9.8min
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/externals/loky/process_executor.py:706: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
-      "timeout or by a memory leak.", UserWarning
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/externals/loky/process_executor.py:706: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
-      "timeout or by a memory leak.", UserWarning
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/externals/loky/process_executor.py:706: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
-      "timeout or by a memory leak.", UserWarning
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/externals/loky/process_executor.py:706: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
-      "timeout or by a memory leak.", UserWarning
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/externals/loky/process_executor.py:706: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
-      "timeout or by a memory leak.", UserWarning
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/externals/loky/process_executor.py:706: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
-      "timeout or by a memory leak.", UserWarning
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/sklearn/externals/joblib/externals/loky/process_executor.py:706: UserWarning: A worker stopped while some jobs were given to the executor. This can be caused by a too short worker timeout or by a memory leak.
-      "timeout or by a memory leak.", UserWarning
-    [Parallel(n_jobs=-1)]: Done 434 tasks      | elapsed: 37.1min
-    [Parallel(n_jobs=-1)]: Done 648 out of 648 | elapsed: 51.3min finished
-
-
     best parameters: {'learning_rate': 0.01, 'max_depth': 4, 'max_features': 5, 'min_samples_leaf': 3, 'n_estimators': 2500}
 
 
@@ -573,14 +467,6 @@ rf_gridsearch = GridSearchCV(RandomForestClassifier(),
 rf_gridsearch.fit(X_train, y_train)
 print( "best parameters:", rf_gridsearch.best_params_ )
 ```
-
-    Fitting 3 folds for each of 72 candidates, totalling 216 fits
-
-
-    [Parallel(n_jobs=-1)]: Using backend LokyBackend with 8 concurrent workers.
-    [Parallel(n_jobs=-1)]: Done  34 tasks      | elapsed:  1.2min
-    [Parallel(n_jobs=-1)]: Done 184 tasks      | elapsed:  7.1min
-    [Parallel(n_jobs=-1)]: Done 216 out of 216 | elapsed:  8.4min finished
 
 
     best parameters: {'max_depth': 12, 'max_features': 'auto', 'min_samples_leaf': 1, 'n_estimators': 2500}
@@ -691,15 +577,12 @@ from sklearn.metrics import confusion_matrix
 plot_confusion_matrix(y_test, best_gb_model.predict(X_test))
 ```
 
-    Confusion matrix, without normalization
+    
     [[3241    4]
      [ 157  183]]
 
 
 
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x15b21e208>
 
 
 
@@ -712,16 +595,9 @@ plot_confusion_matrix(y_test, best_gb_model.predict(X_test))
 plot_confusion_matrix(y_test, best_rf_model.predict(X_test))
 ```
 
-    Confusion matrix, without normalization
+    
     [[3241    4]
      [ 158  182]]
-
-
-
-
-
-    <matplotlib.axes._subplots.AxesSubplot at 0x15b0ae550>
-
 
 
 
@@ -796,33 +672,12 @@ clean.fit(df2)
 X = clean.transform(df2)
 ```
 
-    Rating risk...
-
-
-    /Users/kylecaron/anaconda3/lib/python3.6/site-packages/pandas/core/series.py:951: FutureWarning: 
-    Passing list-likes to .loc or [] with any missing label will raise
-    KeyError in the future, you can use .reindex() as an alternative.
-    
-    See the documentation here:
-    https://pandas.pydata.org/pandas-docs/stable/indexing.html#deprecate-loc-reindex-listlike
-      return self.loc[key]
-
-
-    Risk ratings complete
-    Written to pickle!
-
-
-
 ```python
 # Accuracy score
 best_rf_model.score(X_test,y_test)
 ```
 
-
-
-
     0.9548117154811715
-
 
 
 ## Feature Importance
